@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import M from 'materialize-css';
 
-import { Characters, Places, Weapons } from '../helpers';
+import { Characters, ClearLocalStorage, Places, Weapons } from '../helpers';
 
 import { TableComponent } from '../game/TableComponent';
 
@@ -14,10 +14,17 @@ export const TableGame = () => {
     M.Tabs.init(element, []);
 }, []);
 
+  const reiniciar = () => {
+    ClearLocalStorage();
+    location.reload();
+  }
+
   return (
     <>
       <div className="center-align">
         <img src='https://res.cloudinary.com/echeniquer/image/upload/v1691096891/Simpsons%20Clue%20Game/A_Simpsons_logo.png' height='100' />
+        <br />
+        <button className="waves-effect waves-light btn blue z-depth-5" onClick={reiniciar}>Reiniciar Juego</button>
       </div>
         <div className="row">
       <div className="col s12">

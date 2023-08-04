@@ -11,10 +11,21 @@ export const TableComponent = ({ ObjectPreset = [], name = '' }) => {
         M.textareaAutoResize(element);
         ObjectPreset.forEach(function(obj){
             let value = localStorage.getItem(obj['name']);
+            let valueDescartado = localStorage.getItem(`descartar_${obj['name']}`);
             if(value){
                 const textArea = document.getElementById(`${obj['name']}`);
                 textArea.textContent = value;
                 M.textareaAutoResize(textArea);
+            }
+            if(!!valueDescartado){
+                const button = document.getElementById(`descartar_${obj['name']}`);
+                button.classList.remove('green');
+                button.classList.add('red');
+                const html = `${ name } Descartado`;
+                button.innerHTML = html;
+                setInterval(() => {
+                    button.setAttribute('id', `considerar_${obj['name']}`);
+                }, 500);
             }
         });
         setBand(true);
@@ -24,8 +35,31 @@ export const TableComponent = ({ ObjectPreset = [], name = '' }) => {
         if(band){
             const { id, value } = e.target;
             localStorage.setItem(id, value);
-            console.log(id, value);
         }
+    }
+
+    const accionar = (e) => {
+        const { id } = e.target;
+        const [estado, item] = id.split('_');
+        const button = document.getElementById(id);
+        let html = null;
+        if(estado === 'descartar'){
+            button.classList.remove('green');
+            button.classList.add('red');
+            html = `${ name } Descartado`;
+            localStorage.setItem(id, true);
+            button.setAttribute('id', `considerar_${item}`);
+        }
+
+        if(estado === 'considerar'){
+            button.classList.remove('red');
+            button.classList.add('green');
+            html = `Descartar ${ name }`;
+            localStorage.removeItem(`descartar_${item}`);
+            button.setAttribute('id', `descartar_${item}`);
+        }
+        button.innerHTML = html;
+
     }
 
 
@@ -52,7 +86,7 @@ export const TableComponent = ({ ObjectPreset = [], name = '' }) => {
                                     <b><i>{o['name']}</i></b>
                                 </td>
                                 <td><textarea id={`${o['name']}`} className="materialize-textarea" onChange={(e) => saveDataToLocalStorage(e)}></textarea></td>
-                                <td><a className="waves-effect waves-light btn red z-depth-5"><i className="material-icons left">close</i>Descartar { name }</a></td>
+                                <td><button className="waves-effect waves-light btn green z-depth-5" id={`descartar_${o['name']}`} onClick={(e) => accionar(e)} >Descartar { name }</button></td>
                             </tr>
                         )
                     })
