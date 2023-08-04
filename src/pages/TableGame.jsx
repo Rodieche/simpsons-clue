@@ -11,7 +11,6 @@ export const TableGame = () => {
 
   useEffect(() => {
     var element = document.querySelector('.tabs');
-    console.log(element);
     M.Tabs.init(element, []);
 }, []);
 
