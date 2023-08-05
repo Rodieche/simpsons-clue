@@ -1,6 +1,7 @@
 import M from 'materialize-css';
 import { useEffect, useState } from 'react';
 import { AvatarCreator } from './AvatarCreator';
+import { ModalComponent } from './ModalComponent';
 
 export const TableComponent = ({ ObjectPreset = [], name = '' }) => {
 
@@ -62,36 +63,51 @@ export const TableComponent = ({ ObjectPreset = [], name = '' }) => {
 
     }
 
+    const showImage = (e) => {
+
+    }
+
 
 
     return (
-        <table className='striped centered'>
-            <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Anotacion</th>
-                <th>Descartado</th>
-            </tr>
-            </thead>
+        <>
+            <table className='striped centered'>
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Anotacion</th>
+                    <th>Opciones</th>
+                </tr>
+                </thead>
 
-            <tbody>
-                {
-                    ObjectPreset.map(o => {
-                        return (
-                            <tr key={o['id']}>
-                                <td>
-                                    {
-                                        (o['img'])? (<AvatarCreator img={o['img']} />) : null
-                                    }
-                                    <b><i>{o['name']}</i></b>
-                                </td>
-                                <td><textarea id={`${o['name']}`} className="materialize-textarea" onChange={(e) => saveDataToLocalStorage(e)}></textarea></td>
-                                <td><button className="waves-effect waves-light btn green z-depth-5" id={`descartar_${o['name']}`} onClick={(e) => accionar(e)} >Descartar { name }</button></td>
-                            </tr>
-                        )
-                    })
-                }
-            </tbody>
-        </table>
+                <tbody>
+                    {
+                        ObjectPreset.map(o => {
+                            return (
+                                <tr key={o['id']}>
+                                    <td>
+                                        {
+                                            (o['img'])? (<AvatarCreator img={o['img']} />) : null
+                                        }
+                                        <b><i>{o['name']}</i></b>
+                                    </td>
+                                    <td><textarea id={`${o['name']}`} className="materialize-textarea" onChange={(e) => saveDataToLocalStorage(e)}></textarea></td>
+                                    <td>
+                                        <button className="waves-effect waves-light btn green z-depth-5" id={`descartar_${o['name']}`} onClick={(e) => accionar(e)} >Descartar { name }</button>
+                                        &nbsp;
+                                        <button className="waves-effect waves-light btn blue z-depth-5 modal-trigger" data-target={`modal_${o['name']}`}>Ver { name }</button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            </table>
+            {
+                ObjectPreset.map(o => {
+                    return (<ModalComponent id={`modal_${o['name']}`} name={o['name']} img={o['img']} key={o['name']} />)
+                })
+            }
+        </>
     )
 }
